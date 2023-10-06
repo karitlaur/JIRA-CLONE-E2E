@@ -88,17 +88,41 @@ describe('Issue comments creating, editing and deleting', () => {
 
         getIssueDetailsModal().within(() => {
             // Create a comment
-            cy.contains('Add a comment...').click();
-            cy.get('textarea[placeholder="Add a comment..."]').type(createComment);
-            cy.contains('button', 'Save').click().should('not.exist');
-            cy.contains('Add a comment...').should('exist');
-            cy.get('[data-testid="issue-comment"]').should('contain', createComment);
+            cy.contains('Add a comment...')
+                .click();
+
+            cy.get('textarea[placeholder="Add a comment..."]')
+                .type(createComment);
+
+            cy.contains('button', 'Save')
+                .click()
+                .should('not.exist');
+
+            cy.contains('Add a comment...')
+                .should('exist');
+
+            cy.get('[data-testid="issue-comment"]')
+                .should('contain', createComment);
 
             // Edit a comment
-            cy.get('[data-testid="issue-comment"]').first().contains('Edit').click().should('not.exist');
-            cy.get('textarea[placeholder="Add a comment..."]').should('contain', createComment).clear().type(editComment);
-            cy.contains('button', 'Save').click().should('not.exist');
-            cy.get('[data-testid="issue-comment"]').should('contain', 'Edit').and('contain', editComment);
+            cy.get('[data-testid="issue-comment"]')
+                .first()
+                .contains('Edit')
+                .click()
+                .should('not.exist');
+
+            cy.get('textarea[placeholder="Add a comment..."]')
+                .should('contain', createComment)
+                .clear()
+                .type(editComment);
+
+            cy.contains('button', 'Save')
+                .click()
+                .should('not.exist');
+
+            cy.get('[data-testid="issue-comment"]')
+                .should('contain', 'Edit')
+                .and('contain', editComment);
         })
         // Delete a comment
         getIssueDetailsModal()
@@ -123,7 +147,7 @@ describe('Issue comments creating, editing and deleting', () => {
             .find('[data-testid="issue-comment"]')
             .should('not.exist');
     });
-}) 
+})
 
 
 
