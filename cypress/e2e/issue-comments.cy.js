@@ -69,3 +69,72 @@ describe('Issue comments creating, editing and deleting', () => {
             .should('not.exist');
     });
 });
+
+
+describe('Issue comments creating, editing and deleting', () => {
+    beforeEach(() => {
+        cy.visit('/');
+        cy.url().should('eq', `${Cypress.env('baseUrl')}project/board`).then((url) => {
+            cy.visit(url + '/board');
+            cy.contains('This is an issue of type: Task.').click();
+        });
+    });
+
+    const getIssueDetailsModal = () => cy.get('[data-testid="modal:issue-details"]');
+
+    it('Should create, edit, and delete a comment successfully', () => {
+        const createComment = 'Beautiful day';
+        const editComment = 'Still beautiful day';
+
+        getIssueDetailsModal().within(() => {
+            // Create a comment
+            cy.contains('Add a comment...').click();
+            cy.get('textarea[placeholder="Add a comment..."]').type(createComment);
+            cy.contains('button', 'Save').click().should('not.exist');
+            cy.contains('Add a comment...').should('exist');
+            cy.get('[data-testid="issue-comment"]').should('contain', createComment);
+
+            // Edit a comment
+            cy.get('[data-testid="issue-comment"]').first().contains('Edit').click().should('not.exist');
+            cy.get('textarea[placeholder="Add a comment..."]').should('contain', createComment).clear().type(editComment);
+            cy.contains('button', 'Save').click().should('not.exist');
+            cy.get('[data-testid="issue-comment"]').should('contain', 'Edit').and('contain', editComment);
+        })
+        // Delete a comment
+        getIssueDetailsModal()
+            .find('[data-testid="issue-comment"]')
+            .contains('Delete')
+            .click();
+
+        cy.get('[data-testid="modal:confirm"]')
+            .contains('button', 'Delete comment')
+            .click()
+            .should('not.exist');
+        getIssueDetailsModal()
+            .find('[data-testid="issue-comment"]')
+            .contains('Delete')
+            .click();
+
+        cy.get('[data-testid="modal:confirm"]')
+            .contains('button', 'Delete comment')
+            .click()
+            .should('not.exist');
+        getIssueDetailsModal()
+            .find('[data-testid="issue-comment"]')
+            .should('not.exist');
+    });
+}) 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
